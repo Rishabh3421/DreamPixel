@@ -10,7 +10,8 @@ import { supabase } from "@/lib/supabaseClient"; // Make sure this path is corre
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/create", label: "Create" },
-  { href: "/pricing", label: "Pricing" }
+  { href: "/pricing", label: "Pricing" },
+  { href: "/dashboard", label: "Dashboard" }
 ];
 
 export const Navbar = () => {
@@ -49,55 +50,66 @@ export const Navbar = () => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-dreamdark backdrop-blur supports-[backdrop-filter]:bg-dreamdark/60">
       <div className="container flex h-16 items-center">
+        {/* Logo */}
         <div className="mr-4 flex">
           <Link to="/" className="mr-2 flex items-center space-x-2">
             <span className="font-bold text-xl text-gradient">DreamPixel</span>
           </Link>
         </div>
 
-        {!isMobile && (
-          <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={`transition-colors hover:text-foreground/80 ${
-                  isActive(link.href) ? "text-foreground" : "text-foreground/60"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-        )}
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              className={`transition-colors hover:text-foreground/80 ${
+                isActive(link.href) ? "text-foreground" : "text-foreground/60"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
+        {/* Right Side Actions */}
         <div className="flex flex-1 items-center justify-end space-x-4">
-          <nav className="flex items-center space-x-2">
-            <ThemeToggle />
+          <ThemeToggle />
 
-            {user ? (
-              <div className="flex items-center space-x-3">
-                <img
-                  src={user.user_metadata?.avatar_url}
-                  alt="Profile"
-                  className="w-8 h-8 rounded-full"
-                />
-                <span className="text-sm text-white">{user.user_metadata?.name}</span>
-                <Button variant="outline" onClick={handleLogout}>
-                  Logout
-                </Button>
-              </div>
-            ) : (
-              <>
-                <Button variant="outline" onClick={openAuthModal}>
-                  Login
-                </Button>
-                <AuthModal isOpen={authModalOpen} onOpenChange={closeAuthModal} />
-              </>
-            )}
+          {/* Desktop Buttons */}
+          {!isMobile && (
+            <>
+              {user ? (
+                <div className="flex items-center space-x-3">
+                  <img
+                    src={user.user_metadata?.avatar_url}
+                    alt="Profile"
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <span className="text-sm text-white">{user.user_metadata?.name}</span>
+                  <Button variant="outline" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Button variant="outline" onClick={openAuthModal}>
+                    Login
+                  </Button>
+                  <AuthModal isOpen={authModalOpen} onOpenChange={closeAuthModal} />
+                </>
+              )}
+            </>
+          )}
 
-            {isMobile && <MobileNav />}
-          </nav>
+          {/* Mobile Menu */}
+          {isMobile && (
+            <MobileNav
+              user={user}
+              onLoginClick={openAuthModal}
+              onLogoutClick={handleLogout}
+            />
+          )}
         </div>
       </div>
     </header>

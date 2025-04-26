@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react"; 
+import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/create", label: "Create" },
-  { href: "/pricing", label: "Pricing" }
+  { href: "/pricing", label: "Pricing" },
+  { href: "/dashboard", label: "Dashboard" }
 ];
 
-export const MobileNav = () => {
+export const MobileNav = ({ user, onLoginClick, onLogoutClick }: any) => {
   const [open, setOpen] = useState(false);
 
   const toggleMenu = () => setOpen(!open);
@@ -36,6 +38,18 @@ export const MobileNav = () => {
                 {link.label}
               </Link>
             ))}
+
+            <div className="border-t border-white/20 pt-4">
+              {user ? (
+                <Button variant="outline" size="sm" onClick={() => { onLogoutClick(); setOpen(false); }}>
+                  Logout
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" onClick={() => { onLoginClick(); setOpen(false); }}>
+                  Login
+                </Button>
+              )}
+            </div>
           </nav>
         </div>
       )}

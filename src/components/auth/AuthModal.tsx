@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,23 +30,21 @@ export function AuthModal({ initialView = "login", trigger, isOpen, onOpenChange
   const { login, signup, googleLogin, isLoading } = useApp();
   const { toast } = useToast();
 
-  // Use either controlled (from parent) or uncontrolled (internal) state
   const openState = isOpen !== undefined ? isOpen : internalIsOpen;
   const setOpenState = onOpenChange || setInternalIsOpen;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     try {
       if (mode === "login") {
         await login(email, password);
         setOpenState(false);
       } else {
-        if (!name) {
+        if (!name.trim()) {
           toast({
             title: "Name required",
             description: "Please enter your name to create an account",
-            variant: "destructive"
+            variant: "destructive",
           });
           return;
         }
@@ -69,14 +66,14 @@ export function AuthModal({ initialView = "login", trigger, isOpen, onOpenChange
   };
 
   const toggleMode = () => {
-    setMode(mode === "login" ? "signup" : "login");
+    setMode((prevMode) => (prevMode === "login" ? "signup" : "login"));
   };
 
   return (
     <Dialog open={openState} onOpenChange={setOpenState}>
-      <DialogTrigger asChild>
-        {trigger || <Button variant="outline">Log In</Button>}
-      </DialogTrigger>
+      {trigger && (
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-[425px] glass border-white/10">
         <DialogHeader>
           <DialogTitle>{mode === "login" ? "Log In" : "Sign Up"}</DialogTitle>
@@ -86,7 +83,7 @@ export function AuthModal({ initialView = "login", trigger, isOpen, onOpenChange
               : "Create a new account to get started with DreamPixel."}
           </DialogDescription>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
           {mode === "signup" && (
             <div className="space-y-2">
@@ -101,7 +98,7 @@ export function AuthModal({ initialView = "login", trigger, isOpen, onOpenChange
               />
             </div>
           )}
-          
+
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -114,7 +111,7 @@ export function AuthModal({ initialView = "login", trigger, isOpen, onOpenChange
               required
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input
@@ -127,9 +124,9 @@ export function AuthModal({ initialView = "login", trigger, isOpen, onOpenChange
               required
             />
           </div>
-          
-          <Button 
-            type="submit" 
+
+          <Button
+            type="submit"
             className="w-full bg-purple-600 hover:bg-purple-700 text-white"
             disabled={isLoading}
           >
@@ -143,7 +140,7 @@ export function AuthModal({ initialView = "login", trigger, isOpen, onOpenChange
             )}
           </Button>
         </form>
-        
+
         <div className="relative my-4">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t border-white/10" />
@@ -152,7 +149,7 @@ export function AuthModal({ initialView = "login", trigger, isOpen, onOpenChange
             <span className="bg-dreamdark px-2 text-muted-foreground">Or continue with</span>
           </div>
         </div>
-        
+
         <Button
           type="button"
           variant="outline"
@@ -184,7 +181,7 @@ export function AuthModal({ initialView = "login", trigger, isOpen, onOpenChange
           )}
           Google
         </Button>
-        
+
         <div className="text-center text-sm text-muted-foreground mt-2">
           {mode === "login" ? "Don't have an account? " : "Already have an account? "}
           <button

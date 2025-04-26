@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
@@ -33,33 +32,44 @@ const Index = () => {
 
           {/* Example Images */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Card 1 */}
             <div className="glass-card p-4 rounded-2xl glow animate-float">
-              <div className="aspect-square rounded-lg bg-gradient-to-br from-purple-400/20 via-blue-500/20 to-purple-500/20 overflow-hidden">
-                <div className="h-full w-full flex items-center justify-center text-white/50 text-sm">
-                  Image preview
-                </div>
+              <div className="aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-purple-400/20 via-blue-500/20 to-purple-500/20">
+                <img
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?fit=crop&w=800&q=80"
+                  alt="Magical forest"
+                  className="object-cover w-full h-full"
+                />
               </div>
               <div className="mt-4 p-2">
                 <div className="text-sm text-muted-foreground">Prompt:</div>
                 <p className="text-sm">"A magical forest with glowing mushrooms and floating lights"</p>
               </div>
             </div>
-            <div className="glass-card p-4 rounded-2xl glow animate-float" style={{ animationDelay: '1s' }}>
-              <div className="aspect-square rounded-lg bg-gradient-to-br from-blue-400/20 via-purple-500/20 to-pink-500/20 overflow-hidden">
-                <div className="h-full w-full flex items-center justify-center text-white/50 text-sm">
-                  Image preview
-                </div>
+
+            {/* Card 2 */}
+            <div className="glass-card p-4 rounded-2xl glow animate-float" style={{ animationDelay: "1s" }}>
+              <div className="aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-blue-400/20 via-purple-500/20 to-pink-500/20">
+                <img
+                  src="https://images.unsplash.com/photo-1470217957101-da7150b9b681?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  alt="Futuristic city"
+                  className="object-cover w-full h-full"
+                />
               </div>
               <div className="mt-4 p-2">
                 <div className="text-sm text-muted-foreground">Prompt:</div>
                 <p className="text-sm">"A futuristic city at sunset with flying cars"</p>
               </div>
             </div>
-            <div className="glass-card p-4 rounded-2xl glow animate-float" style={{ animationDelay: '2s' }}>
-              <div className="aspect-square rounded-lg bg-gradient-to-br from-pink-400/20 via-purple-500/20 to-blue-500/20 overflow-hidden">
-                <div className="h-full w-full flex items-center justify-center text-white/50 text-sm">
-                  Image preview
-                </div>
+
+            {/* Card 3 */}
+            <div className="glass-card p-4 rounded-2xl glow animate-float" style={{ animationDelay: "2s" }}>
+              <div className="aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-pink-400/20 via-purple-500/20 to-blue-500/20">
+                <img
+                  src="https://images.unsplash.com/photo-1585732436636-f786c52696d6?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  alt="Cyberpunk portrait"
+                  className="object-cover w-full h-full"
+                />
               </div>
               <div className="mt-4 p-2">
                 <div className="text-sm text-muted-foreground">Prompt:</div>

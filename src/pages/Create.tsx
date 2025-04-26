@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,7 +15,7 @@ const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const generateImage = async (prompt: string) => {
   try {
     const response = await axios.post(
-      `${SUPABASE_FUNCTION_URL}/functions/v1/generate-image`, 
+      `${SUPABASE_FUNCTION_URL}/functions/v1/generate-image`,
       {
         model: "black-forest-labs/flux",
         prompt,
@@ -25,17 +25,16 @@ const generateImage = async (prompt: string) => {
         height: 1024,
         num_inference_steps: 28,
         seed: -1,
-        negative_prompt: ""
+        negative_prompt: "",
       },
       {
         headers: {
           Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       }
     );
 
-    // The image may come as a base64 string directly
     const base64Image = response.data?.image; // Use the image field from the response
 
     if (!base64Image) throw new Error("No image data received");
@@ -47,17 +46,19 @@ const generateImage = async (prompt: string) => {
   }
 };
 
-
 const Create = () => {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [history, setHistory] = useState<any[]>([]); // To store previous images and prompts
   const { toast } = useToast();
 
+  // Handle prompt input change
   const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(e.target.value);
   };
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -76,14 +77,14 @@ const Create = () => {
       const imageUrl = await generateImage(prompt);
       setGeneratedImage(imageUrl);
 
-      // Save the image to storage (optional)
+      // Save the image to storage with prompt
       const newImage = {
         id: uuidv4(),
         url: imageUrl,
-        prompt: prompt,
+        prompt,
         createdAt: new Date().toISOString(),
       };
-      await saveImage(newImage);
+      setHistory((prevHistory) => [newImage, ...prevHistory]);
 
       toast({
         title: "Image created successfully",
@@ -101,6 +102,7 @@ const Create = () => {
     }
   };
 
+  // Handle image download
   const handleDownload = () => {
     if (!generatedImage) return;
 
@@ -117,6 +119,7 @@ const Create = () => {
     });
   };
 
+  // Handle image sharing
   const handleShare = () => {
     if (!generatedImage) return;
 
@@ -230,6 +233,42 @@ const Create = () => {
               </div>
             )}
           </Card>
+        </div>
+
+        {/* History Section */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold text-gradient mb-4">History</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {history.length > 0 ? (
+              history.map((image) => (
+                <Card key={image.id} className="glass p-6 border-white/10">
+                  <div className="text-sm font-medium mb-2 text-muted-foreground">
+                    {image.prompt}
+                  </div>
+                  <div className="aspect-square rounded-lg overflow-hidden bg-dreamdark-lighter border border-white/5 flex items-center justify-center">
+                    <img src={image.url} alt={image.prompt} className="w-full h-full object-cover" />
+                  </div>
+                </Card>
+              ))
+            ) : (
+              <div className="text-center p-6">
+                <p className="text-muted-foreground mb-1">No history available</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Suggestions Section */}
+        <div className="mt-12">
+          <h3 className="text-xl font-semibold text-gradient mb-4">Suggestions for Better Results</h3>
+          <div className="p-6 border rounded-lg bg-dreamdark-lighter border-white/10">
+            <ul className="list-disc pl-6">
+              <li>Be as specific as possible in your description for more accurate results.</li>
+              <li>Try mentioning colors, settings, and time of day for more detailed images.</li>
+              <li>Avoid overly complex descriptions; focus on key elements for clarity.</li>
+              <li>Use keywords like 'realistic,' 'fantasy,' or 'cartoon' to guide the style of the image.</li>
+            </ul>
+          </div>
         </div>
       </div>
     </Layout>
